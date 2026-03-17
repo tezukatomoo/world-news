@@ -86,6 +86,20 @@
       {"name": "France24 Europe", "url": "https://www.france24.com/en/europe/rss", "lang": "en"}
     ]
   },
+  "environment": {
+    "label": "環境・気候",
+    "feeds": [
+      {"name": "Guardian Environment", "url": "https://www.theguardian.com/environment/rss", "lang": "en"},
+      {"name": "Mongabay", "url": "https://news.mongabay.com/feed/", "lang": "en"},
+      {"name": "Climate Home News", "url": "https://www.climatechangenews.com/feed/", "lang": "en"},
+      {"name": "Grist", "url": "https://grist.org/feed/", "lang": "en"},
+      {"name": "Carbon Brief", "url": "https://www.carbonbrief.org/feed", "lang": "en"},
+      {"name": "BBC Science/Environment", "url": "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml", "lang": "en"},
+      {"name": "DW Environment", "url": "https://rss.dw.com/rdf/rss-en-environment", "lang": "en"},
+      {"name": "InsideClimate News", "url": "https://insideclimatenews.org/feed/", "lang": "en"},
+      {"name": "The Revelator", "url": "https://therevelator.org/feed/", "lang": "en"}
+    ]
+  },
   "architecture": {
     "label": "建築・不動産",
     "feeds": [
