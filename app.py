@@ -64,14 +64,15 @@ def matches_keywords(text, keywords):
 
 def fetch_category(category, config):
     """Fetch and translate articles for a category."""
-    results = []
+    raw_articles = []
     keywords = config.get("keywords", [])
     seen_titles = set()
 
+    # Step 1: Collect all articles first (fast, no translation)
     for source in config["feeds"]:
         try:
             feed = feedparser.parse(source["url"])
-            for entry in feed.entries[:15]:
+            for entry in feed.entries[:10]:
                 title = entry.get("title", "").strip()
                 if not title or title in seen_titles:
                     continue
@@ -85,21 +86,12 @@ def fetch_category(category, config):
                     continue
 
                 seen_titles.add(title)
-
-                lang = source.get("lang", "en")
-                title_ja = translate_text(title, lang)
-                summary_ja = translate_text(summary[:500], lang) if summary else ""
-
-                if lang != "ja":
-                    time.sleep(0.3)
-
-                results.append({
-                    "title": title_ja,
-                    "title_orig": title,
-                    "summary": summary_ja,
+                raw_articles.append({
+                    "title": title,
+                    "summary": summary[:300],
                     "link": entry.get("link", ""),
                     "source": source["name"],
-                    "lang": lang,
+                    "lang": source.get("lang", "en"),
                     "published": parse_date(entry),
                     "category": category,
                 })
@@ -107,8 +99,28 @@ def fetch_category(category, config):
             print(f"  Warning: Failed to fetch {source['name']}: {e}", flush=True)
             continue
 
-    results.sort(key=lambda x: x["published"], reverse=True)
-    return results[:30]
+    # Sort by date and take top 30
+    raw_articles.sort(key=lambda x: x["published"], reverse=True)
+    raw_articles = raw_articles[:30]
+
+    # Step 2: Translate titles and summaries
+    results = []
+    for a in raw_articles:
+        lang = a["lang"]
+        title_ja = translate_text(a["title"], lang)
+        summary_ja = translate_text(a["summary"], lang) if a["summary"] else ""
+        results.append({
+            "title": title_ja,
+            "title_orig": a["title"],
+            "summary": summary_ja,
+            "link": a["link"],
+            "source": a["source"],
+            "lang": lang,
+            "published": a["published"],
+            "category": a["category"],
+        })
+
+    return results
 
 
 def fetch_all_feeds():
