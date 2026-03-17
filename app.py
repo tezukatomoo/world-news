@@ -117,14 +117,15 @@ def fetch_category(category, config):
 
 def fetch_all_feeds():
     """Fetch all categories."""
-    app.logger.info("Fetching feeds...")
+    import sys
+    print("==> Fetching feeds...", flush=True)
     config = load_feeds_config()
     new_cache = {"last_updated": datetime.now(timezone.utc).isoformat()}
 
     for category, cat_config in config.items():
         articles = fetch_category(category, cat_config)
         new_cache[category] = articles
-        app.logger.info(f"  {category}: {len(articles)} articles")
+        print(f"  {category}: {len(articles)} articles", flush=True)
 
     with cache_lock:
         global articles_cache
@@ -137,7 +138,7 @@ def fetch_all_feeds():
     except Exception as e:
         app.logger.warning(f"Failed to save cache: {e}")
 
-    app.logger.info("Feed fetch complete.")
+    print("==> Feed fetch complete.", flush=True)
 
 
 def load_cache_from_disk():
@@ -193,8 +194,10 @@ def api_refresh():
 
 
 # --- Startup ---
+print("==> Starting World News Japan...", flush=True)
 load_cache_from_disk()
 start_scheduler()
+print("==> Scheduler started. Fetching feeds in background.", flush=True)
 
 if __name__ == "__main__":
     app.run(debug=False, port=5001)
