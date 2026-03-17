@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World News Japan - 世界のメディアを日本語で</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+            background: #0f1419;
+            color: #e7e9ea;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-bottom: 1px solid #2a3a5c;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .logo span {
+            color: #4ecdc4;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .last-updated {
+            font-size: 0.8rem;
+            color: #8899a6;
+        }
+
+        .refresh-btn {
+            background: #4ecdc4;
+            color: #0f1419;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: opacity 0.2s;
+        }
+
+        .refresh-btn:hover { opacity: 0.85; }
+        .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Category tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            max-width: 1200px;
+            margin: 16px auto;
+            padding: 0 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: #1e2732;
+            border: 1px solid #38444d;
+            color: #8899a6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            border-color: #4ecdc4;
+            color: #e7e9ea;
+        }
+
+        .tab.active {
+            background: #4ecdc4;
+            color: #0f1419;
+            border-color: #4ecdc4;
+            font-weight: 700;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8px 24px 40px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8899a6;
+            font-size: 1.1rem;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border: 3px solid #38444d;
+            border-top-color: #4ecdc4;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8899a6;
+        }
+
+        /* Article grid */
+        .articles {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+
+        .article {
+            background: #1e2732;
+            border: 1px solid #38444d;
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.2s, transform 0.15s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article:hover {
+            border-color: #4ecdc4;
+            transform: translateY(-2px);
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+        }
+
+        .source-badge {
+            background: #2a3a5c;
+            color: #4ecdc4;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .article-date {
+            color: #8899a6;
+        }
+
+        .article-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .article-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .article-title a:hover {
+            color: #4ecdc4;
+        }
+
+        .article-title-orig {
+            font-size: 0.8rem;
+            color: #8899a6;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .article-summary {
+            font-size: 0.9rem;
+            color: #b0bec5;
+            line-height: 1.7;
+            flex-grow: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .articles {
+                grid-template-columns: 1fr;
+            }
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .tabs {
+                padding: 0 16px;
+            }
+            .container {
+                padding: 8px 16px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo">World News <span>Japan</span></div>
+            <div class="header-actions">
+                <span class="last-updated" id="lastUpdated"></span>
+                <button class="refresh-btn" id="refreshBtn" onclick="refreshFeeds()">更新</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="tabs" id="tabs">
+        {% for key, label in categories.items() %}
+        <div class="tab {% if loop.first %}active{% endif %}" data-category="{{ key }}" onclick="switchTab('{{ key }}', this)">
+            {{ label }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="container">
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>記事を読み込み中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCategory = Object.keys({{ categories | tojson }})[0] || 'general';
+
+        function switchTab(category, el) {
+            currentCategory = category;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            loadArticles(category);
+        }
+
+        async function loadArticles(category) {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><div>記事を読み込み中...</div></div>';
+
+            try {
+                const res = await fetch(`/api/articles?category=${category}`);
+                const data = await res.json();
+
+                if (data.last_updated) {
+                    const d = new Date(data.last_updated);
+                    document.getElementById('lastUpdated').textContent =
+                        `最終更新: ${d.toLocaleString('ja-JP')}`;
+                }
+
+                if (!data.articles || data.articles.length === 0) {
+                    content.innerHTML = '<div class="empty">記事がまだありません。初回の取得には数分かかります。</div>';
+                    return;
+                }
+
+                let html = '<div class="articles">';
+                for (const a of data.articles) {
+                    const date = new Date(a.published);
+                    const dateStr = date.toLocaleDateString('ja-JP', {
+                        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+
+                    html += `
+                        <div class="article">
+                            <div class="article-meta">
+                                <span class="source-badge">${escHtml(a.source)}</span>
+                                <span class="article-date">${dateStr}</span>
+                            </div>
+                            <div class="article-title">
+                                <a href="${escHtml(a.link)}" target="_blank" rel="noopener">${escHtml(a.title)}</a>
+                            </div>
+                            ${a.title_orig && a.lang !== 'ja' ? `<div class="article-title-orig">${escHtml(a.title_orig)}</div>` : ''}
+                            <div class="article-summary">${escHtml(a.summary)}</div>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+                content.innerHTML = html;
+            } catch (e) {
+                content.innerHTML = '<div class="empty">読み込みに失敗しました。しばらく待ってから再試行してください。</div>';
+            }
+        }
+
+        async function refreshFeeds() {
+            const btn = document.getElementById('refreshBtn');
+            btn.disabled = true;
+            btn.textContent = '更新中...';
+
+            try {
+                await fetch('/api/refresh', { method: 'POST' });
+                // Wait a bit then reload
+                setTimeout(() => {
+                    loadArticles(currentCategory);
+                    btn.disabled = false;
+                    btn.textContent = '更新';
+                }, 5000);
+            } catch (e) {
+                btn.disabled = false;
+                btn.textContent = '更新';
+            }
+        }
+
+        function escHtml(str) {
+            if (!str) return '';
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        // Auto-refresh display every 5 minutes
+        setInterval(() => loadArticles(currentCategory), 300000);
+
+        // Initial load
+        loadArticles(currentCategory);
+    </script>
+</body>
+</html>

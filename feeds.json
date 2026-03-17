@@ -1,0 +1,34 @@
+{
+  "general": {
+    "label": "総合ニュース",
+    "feeds": [
+      {"name": "BBC World", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "lang": "en"},
+      {"name": "Reuters World", "url": "https://www.reutersagency.com/feed/?best-topics=world&post_type=best", "lang": "en"},
+      {"name": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml", "lang": "en"},
+      {"name": "CNN World", "url": "http://rss.cnn.com/rss/edition_world.rss", "lang": "en"},
+      {"name": "The Guardian World", "url": "https://www.theguardian.com/world/rss", "lang": "en"},
+      {"name": "France24", "url": "https://www.france24.com/en/rss", "lang": "en"},
+      {"name": "DW News", "url": "https://rss.dw.com/rdf/rss-en-all", "lang": "en"},
+      {"name": "NHK World", "url": "https://www3.nhk.or.jp/rss/news/cat0.xml", "lang": "ja"}
+    ]
+  },
+  "conflict": {
+    "label": "戦争・治安",
+    "feeds": [
+      {"name": "BBC World", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "lang": "en"},
+      {"name": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml", "lang": "en"},
+      {"name": "Reuters World", "url": "https://www.reutersagency.com/feed/?best-topics=world&post_type=best", "lang": "en"},
+      {"name": "France24", "url": "https://www.france24.com/en/rss", "lang": "en"}
+    ],
+    "keywords": ["war", "conflict", "military", "attack", "bomb", "weapon", "soldier", "troops", "missile", "drone", "strike", "terrorism", "security", "police", "crime", "arrest", "protest", "riot", "coup", "insurgent", "ceasefire", "sanctions", "nuclear", "defense", "army", "navy", "戦争", "軍事", "攻撃", "テロ", "治安", "紛争", "爆撃"]
+  },
+  "architecture": {
+    "label": "建築・不動産",
+    "feeds": [
+      {"name": "ArchDaily", "url": "https://www.archdaily.com/feed", "lang": "en"},
+      {"name": "Dezeen", "url": "https://www.dezeen.com/feed/", "lang": "en"},
+      {"name": "Architectural Digest", "url": "https://www.architecturaldigest.com/feed/rss", "lang": "en"},
+      {"name": "The Architect's Newspaper", "url": "https://www.archpaper.com/feed/", "lang": "en"}
+    ]
+  }
+}
