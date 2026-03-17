@@ -3,13 +3,17 @@
     "label": "総合ニュース",
     "feeds": [
       {"name": "BBC World", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "lang": "en"},
-      {"name": "Reuters World", "url": "https://www.reutersagency.com/feed/?best-topics=world&post_type=best", "lang": "en"},
       {"name": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml", "lang": "en"},
-      {"name": "CNN World", "url": "http://rss.cnn.com/rss/edition_world.rss", "lang": "en"},
-      {"name": "The Guardian World", "url": "https://www.theguardian.com/world/rss", "lang": "en"},
       {"name": "France24", "url": "https://www.france24.com/en/rss", "lang": "en"},
       {"name": "DW News", "url": "https://rss.dw.com/rdf/rss-en-all", "lang": "en"},
-      {"name": "NHK World", "url": "https://www3.nhk.or.jp/rss/news/cat0.xml", "lang": "ja"}
+      {"name": "NHK World", "url": "https://www3.nhk.or.jp/rss/news/cat0.xml", "lang": "ja"},
+      {"name": "South China Morning Post", "url": "https://www.scmp.com/rss/91/feed", "lang": "en"},
+      {"name": "The Diplomat", "url": "https://thediplomat.com/feed/", "lang": "en"},
+      {"name": "Channel News Asia", "url": "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml", "lang": "en"},
+      {"name": "AllAfrica", "url": "https://allafrica.com/tools/headlines/rdf/latest/headlines.rdf", "lang": "en"},
+      {"name": "MercoPress", "url": "https://en.mercopress.com/rss", "lang": "en"},
+      {"name": "Balkan Insight", "url": "https://balkaninsight.com/feed/", "lang": "en"},
+      {"name": "Moscow Times", "url": "https://www.themoscowtimes.com/rss/news", "lang": "en"}
     ]
   },
   "conflict": {
@@ -17,10 +21,70 @@
     "feeds": [
       {"name": "BBC World", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "lang": "en"},
       {"name": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml", "lang": "en"},
-      {"name": "Reuters World", "url": "https://www.reutersagency.com/feed/?best-topics=world&post_type=best", "lang": "en"},
-      {"name": "France24", "url": "https://www.france24.com/en/rss", "lang": "en"}
+      {"name": "France24", "url": "https://www.france24.com/en/rss", "lang": "en"},
+      {"name": "Middle East Eye", "url": "https://www.middleeasteye.net/rss", "lang": "en"},
+      {"name": "Middle East Monitor", "url": "https://www.middleeastmonitor.com/feed/", "lang": "en"},
+      {"name": "Iran Intl", "url": "https://www.iranintl.com/en/feed", "lang": "en"},
+      {"name": "Times of Israel", "url": "https://www.timesofisrael.com/feed/", "lang": "en"},
+      {"name": "The New Arab", "url": "https://www.newarab.com/rss", "lang": "en"},
+      {"name": "Punch Nigeria", "url": "https://punchng.com/feed/", "lang": "en"},
+      {"name": "Moscow Times", "url": "https://www.themoscowtimes.com/rss/news", "lang": "en"}
     ],
-    "keywords": ["war", "conflict", "military", "attack", "bomb", "weapon", "soldier", "troops", "missile", "drone", "strike", "terrorism", "security", "police", "crime", "arrest", "protest", "riot", "coup", "insurgent", "ceasefire", "sanctions", "nuclear", "defense", "army", "navy", "戦争", "軍事", "攻撃", "テロ", "治安", "紛争", "爆撃"]
+    "keywords": ["war", "conflict", "military", "attack", "bomb", "weapon", "soldier", "troops", "missile", "drone", "strike", "terrorism", "security", "police", "crime", "arrest", "protest", "riot", "coup", "insurgent", "ceasefire", "sanctions", "nuclear", "defense", "army", "navy", "killed", "casualties", "siege", "invasion", "occupation", "rebel", "militia", "戦争", "軍事", "攻撃", "テロ", "治安", "紛争", "爆撃"]
+  },
+  "mideast": {
+    "label": "中東",
+    "feeds": [
+      {"name": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml", "lang": "en"},
+      {"name": "Middle East Eye", "url": "https://www.middleeasteye.net/rss", "lang": "en"},
+      {"name": "Middle East Monitor", "url": "https://www.middleeastmonitor.com/feed/", "lang": "en"},
+      {"name": "The New Arab", "url": "https://www.newarab.com/rss", "lang": "en"},
+      {"name": "Iran Intl", "url": "https://www.iranintl.com/en/feed", "lang": "en"},
+      {"name": "Times of Israel", "url": "https://www.timesofisrael.com/feed/", "lang": "en"},
+      {"name": "Daily Sabah", "url": "https://www.dailysabah.com/rssFeed/home", "lang": "en"}
+    ]
+  },
+  "africa": {
+    "label": "アフリカ",
+    "feeds": [
+      {"name": "AllAfrica", "url": "https://allafrica.com/tools/headlines/rdf/latest/headlines.rdf", "lang": "en"},
+      {"name": "The Africa Report", "url": "https://www.theafricareport.com/feed/", "lang": "en"},
+      {"name": "Punch Nigeria", "url": "https://punchng.com/feed/", "lang": "en"},
+      {"name": "BBC Africa", "url": "https://feeds.bbci.co.uk/news/world/africa/rss.xml", "lang": "en"},
+      {"name": "France24 Africa", "url": "https://www.france24.com/en/africa/rss", "lang": "en"}
+    ]
+  },
+  "asia": {
+    "label": "アジア・太平洋",
+    "feeds": [
+      {"name": "South China Morning Post", "url": "https://www.scmp.com/rss/91/feed", "lang": "en"},
+      {"name": "The Diplomat", "url": "https://thediplomat.com/feed/", "lang": "en"},
+      {"name": "Channel News Asia", "url": "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml", "lang": "en"},
+      {"name": "Rappler", "url": "https://www.rappler.com/feed/", "lang": "en"},
+      {"name": "NHK World", "url": "https://www3.nhk.or.jp/rss/news/cat0.xml", "lang": "ja"},
+      {"name": "BBC Asia", "url": "https://feeds.bbci.co.uk/news/world/asia/rss.xml", "lang": "en"}
+    ]
+  },
+  "americas": {
+    "label": "南北アメリカ",
+    "feeds": [
+      {"name": "Buenos Aires Times", "url": "https://www.batimes.com.ar/feed", "lang": "en"},
+      {"name": "Brazil Wire", "url": "https://www.brasilwire.com/feed/", "lang": "en"},
+      {"name": "MercoPress", "url": "https://en.mercopress.com/rss", "lang": "en"},
+      {"name": "BBC Latin America", "url": "https://feeds.bbci.co.uk/news/world/latin_america/rss.xml", "lang": "en"},
+      {"name": "CNN Americas", "url": "http://rss.cnn.com/rss/edition_americas.rss", "lang": "en"}
+    ]
+  },
+  "europe": {
+    "label": "欧州・ロシア",
+    "feeds": [
+      {"name": "The Guardian World", "url": "https://www.theguardian.com/world/rss", "lang": "en"},
+      {"name": "DW News", "url": "https://rss.dw.com/rdf/rss-en-all", "lang": "en"},
+      {"name": "Moscow Times", "url": "https://www.themoscowtimes.com/rss/news", "lang": "en"},
+      {"name": "Balkan Insight", "url": "https://balkaninsight.com/feed/", "lang": "en"},
+      {"name": "BBC Europe", "url": "https://feeds.bbci.co.uk/news/world/europe/rss.xml", "lang": "en"},
+      {"name": "France24 Europe", "url": "https://www.france24.com/en/europe/rss", "lang": "en"}
+    ]
   },
   "architecture": {
     "label": "建築・不動産",
