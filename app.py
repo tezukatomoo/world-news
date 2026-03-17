@@ -1,4 +1,5 @@
 import json
+import re
 import time
 import threading
 from datetime import datetime, timezone
@@ -20,6 +21,7 @@ translator = GoogleTranslator(source="en", target="ja")
 # In-memory article cache
 articles_cache = {"general": [], "conflict": [], "architecture": [], "last_updated": None}
 cache_lock = threading.Lock()
+scheduler_started = False
 
 
 def load_feeds_config():
@@ -32,7 +34,6 @@ def translate_text(text, lang="en"):
     if not text or lang == "ja":
         return text
     try:
-        # deep-translator has a 5000 char limit per request
         if len(text) > 4500:
             text = text[:4500] + "..."
         result = translator.translate(text)
@@ -76,13 +77,10 @@ def fetch_category(category, config):
                     continue
 
                 summary = entry.get("summary", entry.get("description", "")).strip()
-                # Remove HTML tags simply
-                import re
                 summary = re.sub(r"<[^>]+>", "", summary).strip()
 
                 full_text = f"{title} {summary}"
 
-                # For conflict category, filter by keywords
                 if keywords and not matches_keywords(full_text, keywords):
                     continue
 
@@ -92,7 +90,6 @@ def fetch_category(category, config):
                 title_ja = translate_text(title, lang)
                 summary_ja = translate_text(summary[:500], lang) if summary else ""
 
-                # Add small delay to avoid rate limiting
                 if lang != "ja":
                     time.sleep(0.3)
 
@@ -107,36 +104,39 @@ def fetch_category(category, config):
                     "category": category,
                 })
         except Exception as e:
-            app.logger.warning(f"Failed to fetch {source['name']}: {e}")
+            print(f"  Warning: Failed to fetch {source['name']}: {e}", flush=True)
             continue
 
-    # Sort by date descending
     results.sort(key=lambda x: x["published"], reverse=True)
     return results[:30]
 
 
 def fetch_all_feeds():
-    """Fetch all categories."""
-    import sys
+    """Fetch all categories, updating cache incrementally."""
+    global articles_cache
     print("==> Fetching feeds...", flush=True)
     config = load_feeds_config()
-    new_cache = {"last_updated": datetime.now(timezone.utc).isoformat()}
 
     for category, cat_config in config.items():
-        articles = fetch_category(category, cat_config)
-        new_cache[category] = articles
-        print(f"  {category}: {len(articles)} articles", flush=True)
+        try:
+            articles = fetch_category(category, cat_config)
+            print(f"  {category}: {len(articles)} articles", flush=True)
 
-    with cache_lock:
-        global articles_cache
-        articles_cache = new_cache
+            # Update cache incrementally per category
+            with cache_lock:
+                articles_cache[category] = articles
+                articles_cache["last_updated"] = datetime.now(timezone.utc).isoformat()
+        except Exception as e:
+            print(f"  Error fetching {category}: {e}", flush=True)
 
     # Save to disk
     try:
+        with cache_lock:
+            cache_copy = dict(articles_cache)
         with open(CACHE_FILE, "w", encoding="utf-8") as f:
-            json.dump(new_cache, f, ensure_ascii=False, indent=2)
+            json.dump(cache_copy, f, ensure_ascii=False, indent=2)
     except Exception as e:
-        app.logger.warning(f"Failed to save cache: {e}")
+        print(f"  Warning: Failed to save cache: {e}", flush=True)
 
     print("==> Feed fetch complete.", flush=True)
 
@@ -148,26 +148,43 @@ def load_cache_from_disk():
         try:
             with open(CACHE_FILE, "r", encoding="utf-8") as f:
                 articles_cache = json.load(f)
-            app.logger.info("Loaded cache from disk.")
+            print("==> Loaded cache from disk.", flush=True)
         except Exception:
             pass
 
 
 def start_scheduler():
     """Start background feed fetching."""
+    global scheduler_started
+    if scheduler_started:
+        return
+    scheduler_started = True
+
     def run():
         while True:
             try:
                 fetch_all_feeds()
             except Exception as e:
-                app.logger.error(f"Scheduler error: {e}")
+                print(f"Scheduler error: {e}", flush=True)
             time.sleep(FETCH_INTERVAL)
 
     t = threading.Thread(target=run, daemon=True)
     t.start()
+    print("==> Scheduler thread started.", flush=True)
+
+
+def ensure_scheduler():
+    """Ensure scheduler is running (called on first request)."""
+    if not scheduler_started:
+        start_scheduler()
 
 
 # --- Routes ---
+
+@app.before_request
+def before_request():
+    ensure_scheduler()
+
 
 @app.route("/")
 def index():
@@ -194,10 +211,9 @@ def api_refresh():
 
 
 # --- Startup ---
-print("==> Starting World News Japan...", flush=True)
+print("==> Loading World News Japan...", flush=True)
 load_cache_from_disk()
-start_scheduler()
-print("==> Scheduler started. Fetching feeds in background.", flush=True)
 
 if __name__ == "__main__":
+    start_scheduler()
     app.run(debug=False, port=5001)
