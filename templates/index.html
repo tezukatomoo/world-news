@@ -8,20 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-card: #13131a;
-            --bg-card-hover: #1a1a24;
-            --bg-surface: #1c1c28;
-            --border: rgba(255,255,255,0.06);
-            --border-hover: rgba(255,255,255,0.12);
-            --text-primary: #f0f0f5;
-            --text-secondary: #9090a8;
-            --text-muted: #606078;
-            --accent-1: #6c5ce7;
-            --accent-2: #00cec9;
-            --accent-3: #fd79a8;
-            --accent-gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
-            --glass: rgba(255,255,255,0.03);
+            --bg-primary: #1a1a2e;
+            --bg-card: #252540;
+            --bg-card-hover: #30304e;
+            --bg-surface: #2e2e4a;
+            --border: rgba(255,255,255,0.10);
+            --border-hover: rgba(255,255,255,0.20);
+            --text-primary: #f5f5fa;
+            --text-secondary: #c0c0d8;
+            --text-muted: #8888b0;
+            --accent-1: #7c6cf7;
+            --accent-2: #20ded8;
+            --accent-3: #ff8ab8;
+            --accent-gradient: linear-gradient(135deg, #7c6cf7, #20ded8);
+            --glass: rgba(255,255,255,0.06);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -42,7 +42,7 @@
             left: -20%;
             width: 80%;
             height: 80%;
-            background: radial-gradient(ellipse, rgba(108,92,231,0.08) 0%, transparent 70%);
+            background: radial-gradient(ellipse, rgba(124,108,247,0.12) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
         }
@@ -53,7 +53,7 @@
             right: -20%;
             width: 70%;
             height: 70%;
-            background: radial-gradient(ellipse, rgba(0,206,201,0.06) 0%, transparent 70%);
+            background: radial-gradient(ellipse, rgba(32,222,216,0.10) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
         }
@@ -63,7 +63,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(10,10,15,0.85);
+            background: rgba(26,26,46,0.90);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
@@ -317,14 +317,14 @@
         }
 
         /* Source colors by region */
-        .source-badge { background: rgba(108,92,231,0.15); color: #a29bfe; }
-        .source-badge[data-region="mideast"] { background: rgba(253,121,168,0.12); color: #fd79a8; }
-        .source-badge[data-region="africa"] { background: rgba(253,203,110,0.12); color: #ffeaa7; }
-        .source-badge[data-region="asia"] { background: rgba(0,206,201,0.12); color: #81ecec; }
-        .source-badge[data-region="americas"] { background: rgba(85,239,196,0.12); color: #55efc4; }
-        .source-badge[data-region="europe"] { background: rgba(116,185,255,0.12); color: #74b9ff; }
-        .source-badge[data-region="env"] { background: rgba(0,184,148,0.12); color: #00b894; }
-        .source-badge[data-region="arch"] { background: rgba(162,155,254,0.12); color: #a29bfe; }
+        .source-badge { background: rgba(124,108,247,0.18); color: #b8b0ff; }
+        .source-badge[data-region="mideast"] { background: rgba(255,138,184,0.16); color: #ff8ab8; }
+        .source-badge[data-region="africa"] { background: rgba(253,203,110,0.16); color: #ffeaa7; }
+        .source-badge[data-region="asia"] { background: rgba(32,222,216,0.16); color: #80f0ec; }
+        .source-badge[data-region="americas"] { background: rgba(85,239,196,0.16); color: #55efc4; }
+        .source-badge[data-region="europe"] { background: rgba(116,185,255,0.16); color: #90c8ff; }
+        .source-badge[data-region="env"] { background: rgba(0,200,160,0.16); color: #40d8b0; }
+        .source-badge[data-region="arch"] { background: rgba(180,170,255,0.16); color: #b8b0ff; }
 
         .article-date {
             color: var(--text-muted);
