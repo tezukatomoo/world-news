@@ -4,247 +4,438 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World News Japan - 世界のメディアを日本語で</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-card: #13131a;
+            --bg-card-hover: #1a1a24;
+            --bg-surface: #1c1c28;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text-primary: #f0f0f5;
+            --text-secondary: #9090a8;
+            --text-muted: #606078;
+            --accent-1: #6c5ce7;
+            --accent-2: #00cec9;
+            --accent-3: #fd79a8;
+            --accent-gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
+            --glass: rgba(255,255,255,0.03);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic', sans-serif;
-            background: #0f1419;
-            color: #e7e9ea;
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* Ambient background glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(ellipse, rgba(108,92,231,0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -30%;
+            right: -20%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(ellipse, rgba(0,206,201,0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
         header {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-bottom: 1px solid #2a3a5c;
-            padding: 16px 24px;
             position: sticky;
             top: 0;
             z-index: 100;
+            background: rgba(10,10,15,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
         }
 
         .header-inner {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
+            height: 64px;
         }
 
         .logo {
-            font-size: 1.4rem;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            font-size: 1.3rem;
             font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
             color: #fff;
         }
 
-        .logo span {
-            color: #4ecdc4;
+        .logo-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .header-actions {
+        .header-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
 
         .last-updated {
-            font-size: 0.8rem;
-            color: #8899a6;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
         }
 
         .refresh-btn {
-            background: #4ecdc4;
-            color: #0f1419;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            background: var(--glass);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 7px 14px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: opacity 0.2s;
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .refresh-btn:hover { opacity: 0.85; }
-        .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .refresh-btn:hover {
+            background: rgba(108,92,231,0.15);
+            border-color: rgba(108,92,231,0.3);
+            color: var(--text-primary);
+        }
 
-        /* Category tabs */
+        .refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .refresh-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .refresh-btn.spinning svg {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Tabs */
+        .tabs-wrapper {
+            max-width: 1280px;
+            margin: 20px auto 0;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
         .tabs {
             display: flex;
-            gap: 8px;
-            max-width: 1200px;
-            margin: 16px auto;
-            padding: 0 24px;
+            gap: 6px;
             flex-wrap: wrap;
+            padding: 4px;
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border);
         }
 
         .tab {
-            background: #1e2732;
-            border: 1px solid #38444d;
-            color: #8899a6;
-            padding: 10px 20px;
-            border-radius: 8px;
+            color: var(--text-muted);
+            padding: 9px 16px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.82rem;
             font-weight: 500;
-            transition: all 0.2s;
+            transition: all 0.25s;
+            border: none;
+            background: transparent;
+            white-space: nowrap;
+            font-family: inherit;
         }
 
         .tab:hover {
-            border-color: #4ecdc4;
-            color: #e7e9ea;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.04);
         }
 
         .tab.active {
-            background: #4ecdc4;
-            color: #0f1419;
-            border-color: #4ecdc4;
-            font-weight: 700;
+            background: var(--accent-gradient);
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 2px 12px rgba(108,92,231,0.3);
         }
 
         /* Main content */
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 8px 24px 40px;
+            padding: 20px 24px 60px;
+            position: relative;
+            z-index: 1;
         }
 
+        /* Category header */
+        .category-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .article-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Loading */
         .loading {
             text-align: center;
-            padding: 60px 20px;
-            color: #8899a6;
-            font-size: 1.1rem;
+            padding: 80px 20px;
+            color: var(--text-muted);
         }
 
         .spinner {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            border: 3px solid #38444d;
-            border-top-color: #4ecdc4;
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent-1);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 12px;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 16px;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .empty {
             text-align: center;
-            padding: 60px 20px;
-            color: #8899a6;
+            padding: 80px 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
         /* Article grid */
         .articles {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 14px;
         }
 
         .article {
-            background: #1e2732;
-            border: 1px solid #38444d;
-            border-radius: 12px;
-            padding: 20px;
-            transition: border-color 0.2s, transform 0.15s;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .article:hover {
-            border-color: #4ecdc4;
-            transform: translateY(-2px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .article:hover::before {
+            opacity: 1;
         }
 
         .article-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            font-size: 0.8rem;
+            margin-bottom: 12px;
         }
 
         .source-badge {
-            background: #2a3a5c;
-            color: #4ecdc4;
-            padding: 3px 10px;
-            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
         }
 
+        /* Source colors by region */
+        .source-badge { background: rgba(108,92,231,0.15); color: #a29bfe; }
+        .source-badge[data-region="mideast"] { background: rgba(253,121,168,0.12); color: #fd79a8; }
+        .source-badge[data-region="africa"] { background: rgba(253,203,110,0.12); color: #ffeaa7; }
+        .source-badge[data-region="asia"] { background: rgba(0,206,201,0.12); color: #81ecec; }
+        .source-badge[data-region="americas"] { background: rgba(85,239,196,0.12); color: #55efc4; }
+        .source-badge[data-region="europe"] { background: rgba(116,185,255,0.12); color: #74b9ff; }
+        .source-badge[data-region="env"] { background: rgba(0,184,148,0.12); color: #00b894; }
+        .source-badge[data-region="arch"] { background: rgba(162,155,254,0.12); color: #a29bfe; }
+
         .article-date {
-            color: #8899a6;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-family: 'Inter', sans-serif;
         }
 
         .article-title {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
-            line-height: 1.5;
-            margin-bottom: 8px;
-            color: #fff;
+            line-height: 1.6;
+            margin-bottom: 6px;
         }
 
         .article-title a {
-            color: inherit;
+            color: var(--text-primary);
             text-decoration: none;
+            transition: color 0.2s;
         }
 
         .article-title a:hover {
-            color: #4ecdc4;
+            color: var(--accent-2);
         }
 
         .article-title-orig {
-            font-size: 0.8rem;
-            color: #8899a6;
+            font-size: 0.75rem;
+            color: var(--text-muted);
             margin-bottom: 10px;
             line-height: 1.4;
+            font-family: 'Inter', sans-serif;
         }
 
         .article-summary {
-            font-size: 0.9rem;
-            color: #b0bec5;
-            line-height: 1.7;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
             flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
+        .article-footer {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .read-more {
+            font-size: 0.75rem;
+            color: var(--accent-2);
+            text-decoration: none;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap 0.2s;
+        }
+
+        .read-more:hover { gap: 8px; }
+
         /* Responsive */
-        @media (max-width: 600px) {
-            .articles {
-                grid-template-columns: 1fr;
-            }
-            .header-inner {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .tabs {
-                padding: 0 16px;
-            }
-            .container {
-                padding: 8px 16px 40px;
-            }
+        @media (max-width: 768px) {
+            .articles { grid-template-columns: 1fr; }
+            .header-inner { height: 56px; }
+            .logo { font-size: 1.1rem; }
+            .tabs-wrapper, .container { padding-left: 16px; padding-right: 16px; }
+            .tab { padding: 8px 12px; font-size: 0.78rem; }
+            .category-title { font-size: 1.2rem; }
+        }
+
+        /* Smooth page transitions */
+        .articles { animation: fadeUp 0.4s ease-out; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <header>
         <div class="header-inner">
-            <div class="logo">World News <span>Japan</span></div>
-            <div class="header-actions">
+            <div class="logo">
+                <div class="logo-icon">W</div>
+                <span class="logo-text">World News Japan</span>
+            </div>
+            <div class="header-right">
                 <span class="last-updated" id="lastUpdated"></span>
-                <button class="refresh-btn" id="refreshBtn" onclick="refreshFeeds()">更新</button>
+                <button class="refresh-btn" id="refreshBtn" onclick="refreshFeeds()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    更新
+                </button>
             </div>
         </div>
     </header>
 
-    <div class="tabs" id="tabs">
-        {% for key, label in categories.items() %}
-        <div class="tab {% if loop.first %}active{% endif %}" data-category="{{ key }}" onclick="switchTab('{{ key }}', this)">
-            {{ label }}
+    <div class="tabs-wrapper">
+        <div class="tabs" id="tabs">
+            {% for key, label in categories.items() %}
+            <div class="tab {% if loop.first %}active{% endif %}" data-category="{{ key }}" onclick="switchTab('{{ key }}', this)">
+                {{ label }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 
     <div class="container">
@@ -257,7 +448,31 @@
     </div>
 
     <script>
-        let currentCategory = Object.keys({{ categories | tojson }})[0] || 'general';
+        const categories = {{ categories | tojson }};
+        let currentCategory = Object.keys(categories)[0] || 'general';
+
+        // Source to region mapping for badge colors
+        const sourceRegion = {
+            'Middle East Eye': 'mideast', 'Middle East Monitor': 'mideast',
+            'The New Arab': 'mideast', 'Iran Intl': 'mideast',
+            'Times of Israel': 'mideast', 'Daily Sabah': 'mideast', 'Al Jazeera': 'mideast',
+            'AllAfrica': 'africa', 'The Africa Report': 'africa',
+            'Punch Nigeria': 'africa', 'BBC Africa': 'africa', 'France24 Africa': 'africa',
+            'South China Morning Post': 'asia', 'The Diplomat': 'asia',
+            'Channel News Asia': 'asia', 'Rappler': 'asia',
+            'NHK World': 'asia', 'BBC Asia': 'asia',
+            'Buenos Aires Times': 'americas', 'Brazil Wire': 'americas',
+            'MercoPress': 'americas', 'BBC Latin America': 'americas', 'CNN Americas': 'americas',
+            'The Guardian World': 'europe', 'Moscow Times': 'europe',
+            'Balkan Insight': 'europe', 'BBC Europe': 'europe',
+            'France24 Europe': 'europe', 'DW News': 'europe',
+            'Guardian Environment': 'env', 'Mongabay': 'env',
+            'Climate Home News': 'env', 'Grist': 'env', 'Carbon Brief': 'env',
+            'BBC Science/Environment': 'env', 'DW Environment': 'env',
+            'InsideClimate News': 'env', 'The Revelator': 'env',
+            'ArchDaily': 'arch', 'Dezeen': 'arch',
+            'Architectural Digest': 'arch', "The Architect's Newspaper": 'arch',
+        };
 
         function switchTab(category, el) {
             currentCategory = category;
@@ -277,7 +492,7 @@
                 if (data.last_updated) {
                     const d = new Date(data.last_updated);
                     document.getElementById('lastUpdated').textContent =
-                        `最終更新: ${d.toLocaleString('ja-JP')}`;
+                        d.toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                 }
 
                 if (!data.articles || data.articles.length === 0) {
@@ -285,17 +500,25 @@
                     return;
                 }
 
-                let html = '<div class="articles">';
+                const catLabel = categories[category] || category;
+                let html = `
+                    <div class="category-header">
+                        <div class="category-title">${escHtml(catLabel)}</div>
+                        <div class="article-count">${data.articles.length} 件</div>
+                    </div>
+                    <div class="articles">`;
+
                 for (const a of data.articles) {
                     const date = new Date(a.published);
                     const dateStr = date.toLocaleDateString('ja-JP', {
                         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                     });
+                    const region = sourceRegion[a.source] || '';
 
                     html += `
                         <div class="article">
                             <div class="article-meta">
-                                <span class="source-badge">${escHtml(a.source)}</span>
+                                <span class="source-badge" data-region="${region}">${escHtml(a.source)}</span>
                                 <span class="article-date">${dateStr}</span>
                             </div>
                             <div class="article-title">
@@ -303,8 +526,12 @@
                             </div>
                             ${a.title_orig && a.lang !== 'ja' ? `<div class="article-title-orig">${escHtml(a.title_orig)}</div>` : ''}
                             <div class="article-summary">${escHtml(a.summary)}</div>
-                        </div>
-                    `;
+                            <div class="article-footer">
+                                <a class="read-more" href="${escHtml(a.link)}" target="_blank" rel="noopener">
+                                    Read more <span>&rarr;</span>
+                                </a>
+                            </div>
+                        </div>`;
                 }
                 html += '</div>';
                 content.innerHTML = html;
@@ -316,19 +543,21 @@
         async function refreshFeeds() {
             const btn = document.getElementById('refreshBtn');
             btn.disabled = true;
-            btn.textContent = '更新中...';
+            btn.classList.add('spinning');
+            btn.querySelector('svg + *') && (btn.lastChild.textContent = '更新中...');
 
             try {
                 await fetch('/api/refresh', { method: 'POST' });
-                // Wait a bit then reload
                 setTimeout(() => {
                     loadArticles(currentCategory);
                     btn.disabled = false;
-                    btn.textContent = '更新';
+                    btn.classList.remove('spinning');
+                    btn.lastChild.textContent = '更新';
                 }, 5000);
             } catch (e) {
                 btn.disabled = false;
-                btn.textContent = '更新';
+                btn.classList.remove('spinning');
+                btn.lastChild.textContent = '更新';
             }
         }
 
@@ -339,10 +568,7 @@
             return d.innerHTML;
         }
 
-        // Auto-refresh display every 5 minutes
         setInterval(() => loadArticles(currentCategory), 300000);
-
-        // Initial load
         loadArticles(currentCategory);
     </script>
 </body>
